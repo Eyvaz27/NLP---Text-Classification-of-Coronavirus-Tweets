@@ -1,0 +1,8 @@
+name: lstm
+
+hidden_size:
+num_layers:
+bias:
+batch_first:
+dropout:
+bidirectional:

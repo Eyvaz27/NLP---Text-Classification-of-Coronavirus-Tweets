@@ -48,15 +48,15 @@ class DataModule:
         return None if loader_cfg.num_workers == 0 else loader_cfg.persistent_workers
 
     def get_generator(self, loader_cfg: DataLoaderStageCfg) -> torch.Generator | None:
-        if loader_cfg.seed is None:
+        if loader_cfg.random_seed is None:
             return None
         generator = Generator()
-        generator.manual_seed(loader_cfg.seed + self.global_rank)
+        generator.manual_seed(loader_cfg.random_seed + self.global_rank)
         return generator
 
     def train_dataloader(self):
         dataset = get_dataset(self.dataset_cfg, "train", 
-                                self.data_loader_cfg.random_seed)
+                                self.data_loader_cfg.train.random_seed)
         return DataLoader(
             dataset,
             self.data_loader_cfg.train.batch_size,
@@ -66,8 +66,8 @@ class DataModule:
             worker_init_fn=worker_init_fn)
 
     def val_dataloader(self):
-        dataset = get_dataset(self.dataset_cfg, "val", 
-                                self.data_loader_cfg.random_seed)
+        dataset = get_dataset(self.dataset_cfg, "validation", 
+                                self.data_loader_cfg.val.random_seed)
         return DataLoader(
             dataset,
             self.data_loader_cfg.val.batch_size,
@@ -78,7 +78,7 @@ class DataModule:
 
     def test_dataloader(self):
         dataset = get_dataset(self.dataset_cfg, "test", 
-                                self.data_loader_cfg.random_seed)
+                                self.data_loader_cfg.test.random_seed)
         return DataLoader(
             dataset,
             self.data_loader_cfg.test.batch_size,

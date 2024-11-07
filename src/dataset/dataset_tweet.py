@@ -24,7 +24,7 @@ class TweetDataset(Dataset):
                  stage: Stage, 
                  random_seed: Optional[int]):
         
-        self.eval_set_ratio = self.cfg.eval_set_ratio
+        self.eval_set_ratio = cfg.eval_set_ratio
         assert self.eval_set_ratio>=0 and self.eval_set_ratio<=1.0
 
         self.seed = random_seed if random_seed else 42
@@ -58,21 +58,28 @@ class TweetDataset(Dataset):
             elif self.stage == "validation":
                 self.feature_texts = feature_texts[validation_sample_indexes]
                 self.label_texts = label_texts[validation_sample_indexes]
+        # # # below code is important 
+        self.feature_texts.reset_index(inplace=True, drop=True)
+        self.label_texts.reset_index(inplace=True, drop=True)
     
     def init_tokenizer(self):
         self.auto_tokenizer = AutoTokenizer.from_pretrained("google-bert/bert-base-uncased")
         self.tokenizer = lambda tweet: self.auto_tokenizer(tweet, padding=self.cfg.padding, truncation=self.cfg.truncation,
                                                            max_length=self.cfg.max_length, return_tensors="pt")
-        self.bert_model = BertModel.from_pretrained("bert-base-uncased", torch_dtype=torch.float16, attn_implementation="sdpa")
+        self.bert_model = BertModel.from_pretrained("bert-base-uncased", 
+                                                    torch_dtype=torch.float32, # because network needs fp32
+                                                    attn_implementation="sdpa").eval()
         self.embedding_layer = lambda tweet_tokens: self.bert_model.embeddings(tweet_tokens['input_ids'])
         
     def __len__(self):
         return len(self.feature_texts)
-
+    
     def __getitem__(self, idx):
         # # # 
         # # # retrieving samples from the dataset
         sample_tweet = self.feature_texts[idx]
         sample_label = self.label_texts[idx]
-        return self.embedding_layer(self.tokenizer(sample_tweet)), sample_label
+        with torch.no_grad():
+            token_embedding = self.embedding_layer(self.tokenizer(sample_tweet)).squeeze(axis=0)
+        return token_embedding, sample_label
     

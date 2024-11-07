@@ -44,6 +44,7 @@ class Trainer:
         
         # trainer CFG is shared across nodes
         self.cfg = trainer_cfg
+        self.vis_dir = visdir
         # Set up the model.
         self.encoder = encoder
         self.decoder = decoder
@@ -140,7 +141,7 @@ class Trainer:
         # # 
         # Settint the sceduler for training
         if self.cfg.optimizer.scheduler=='cos':
-            self.scheduler = CosineAnnealingLR(optimizer=self.optimizer, T_max=self.cfg.training_iterations, eta_min=self.cfg.optimizer.eta_min)
+            self.scheduler = CosineAnnealingLR(optimizer=self.optimizer, T_max=self.cfg.epoch_num * len(self.train_dataloader), eta_min=self.cfg.optimizer.eta_min)
         elif self.cfg.optimizer.scheduler=='cos_ann':
             self.scheduler = CosineAnnealingWarmRestarts(optimizer=self.optimizer, T_0=10000, T_mult=1, eta_min=self.cfg.optimizer.eta_min)
         else: 
@@ -207,6 +208,7 @@ class Trainer:
                                             self.cfg.optimizer.gradient_clip_val)
                 # Optimizer step
                 self.optimizer.step()
+                # print(f"Training loss after {epoch_num} steps = {np.mean(epoch_loss_history)}")
                 # # 
                 # # Updating Scheduler
                 if self.cfg.optimizer.scheduler != "none": # and new_scaler < old_scaler: 
@@ -257,11 +259,11 @@ def model_training(cfg, vis_dir):
     cfg.model.encoder.input_size = cfg.dataset.embedding_dim
     encoder = get_encoder(cfg.model.encoder)
 
-    cfg.model.decoder.input_size = encoder.feature_dim
+    cfg.model.decoder.input_size = encoder.feature_dim()
     cfg.model.decoder.output_size = cfg.dataset.class_count
     decoder = get_decoder(cfg.model.decoder)
     losses = get_losses(cfg.loss)
-    
+
     trainer = Trainer(trainer_cfg=cfg.trainer, encoder=encoder, decoder=decoder, 
                       losses=losses, visdir=vis_dir, datamodule=data_module)
     trainer.train_model()

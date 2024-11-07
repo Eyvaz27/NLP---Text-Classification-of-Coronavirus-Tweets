@@ -29,26 +29,26 @@ class EncoderLSTM(Encoder[EncoderLSTMCfg]):
                              num_layers=self.cfg.num_layers, bias=self.cfg.bias, 
                              batch_first=self.cfg.batch_first, dropout=self.cfg.dropout,
                              bidirectional=self.cfg.bidirectional)
-    def reset_hidden_cell(self, seq_length):
+    def reset_hidden_cell(self, N):
         D = 2 if self.cfg.bidirectional else 1
         if self.cfg.batch_first:
-            h0 = torch.randn(D*self.cfg.num_layers, seq_length, self.cfg.hidden_size)
-            c0 = torch.randn(D*self.cfg.num_layers, seq_length, self.cfg.hidden_size)
+            h0 = torch.randn(D*self.cfg.num_layers, N, self.cfg.hidden_size)
+            c0 = torch.randn(D*self.cfg.num_layers, N, self.cfg.hidden_size)
         else:
-            h0 = torch.randn(seq_length, D*self.cfg.num_layers, self.cfg.hidden_size)
-            c0 = torch.randn(seq_length, D*self.cfg.num_layers, self.cfg.hidden_size)
+            h0 = torch.randn(N, D*self.cfg.num_layers, self.cfg.hidden_size)
+            c0 = torch.randn(N, D*self.cfg.num_layers, self.cfg.hidden_size)
         return h0, c0
     
     def forward(
         self,
         features: Float[Tensor, "batch seq dim"]
         ) -> Float[Tensor, "batch"]:
-        
-        _, s, _ = features.shape
+
+        N, _, _ = features.shape
         # # # initialize hidden and cell states
-        h0, c0 = self.reset_hidden_cell(seq_length=s)
+        h0, c0 = self.reset_hidden_cell(N)
         # # # run LSTM model on token embeddings
-        output, (hn, cn) = self.model(features, (h0, c0))
+        output, _ = self.model(features, (h0, c0))
 
         first_token = output[:, 0, :]
         last_token = output[:, -1, :]
@@ -62,7 +62,7 @@ class EncoderLSTM(Encoder[EncoderLSTMCfg]):
     def feature_dim(self):
         D = 2 if self.cfg.bidirectional else 1
         hidden_dim = D * self.cfg.hidden_size
-        
+
         if self.cfg.aggregation == "sum":
             return hidden_dim
         elif self.cfg.aggregation == "concat":

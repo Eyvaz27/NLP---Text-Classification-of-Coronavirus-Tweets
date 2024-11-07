@@ -14,6 +14,8 @@ class TweetDatasetCfg:
     max_length: int
     padding: str
     truncation: bool
+    embedding_dim: int
+    class_count: int
     eval_set_ratio: float
 
 class TweetDataset(Dataset):
@@ -73,3 +75,4 @@ class TweetDataset(Dataset):
         sample_tweet = self.feature_texts[idx]
         sample_label = self.label_texts[idx]
         return self.embedding_layer(self.tokenizer(sample_tweet)), sample_label
+    

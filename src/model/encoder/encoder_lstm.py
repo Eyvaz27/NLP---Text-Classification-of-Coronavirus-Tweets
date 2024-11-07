@@ -58,3 +58,12 @@ class EncoderLSTM(Encoder[EncoderLSTMCfg]):
             return torch.concatenate([first_token, last_token], axis=-1)
         else:
             raise KeyError("Required aggregation is not implemented yet ...")
+    
+    def feature_dim(self):
+        D = 2 if self.cfg.bidirectional else 1
+        hidden_dim = D * self.cfg.hidden_size
+        
+        if self.cfg.aggregation == "sum":
+            return hidden_dim
+        elif self.cfg.aggregation == "concat":
+            return 2 * hidden_dim

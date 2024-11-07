@@ -2,4 +2,6 @@ name: tweet
 max_length: 64
 padding: "max_length"
 truncation: true
+embedding_dim: 768
+class_count: 5
 eval_set_ratio: 0.2

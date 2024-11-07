@@ -18,3 +18,7 @@ class Encoder(nn.Module, ABC, Generic[T]):
         features: Float[Tensor, "batch seq dim"]
         ) -> Float[Tensor, "batch"]:
         pass
+
+    @property
+    def feature_dim(self): 
+        pass

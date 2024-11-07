@@ -7,7 +7,6 @@ DATASETS: dict[str, Dataset] = {
 
 DatasetCfg = TweetDatasetCfg
 
-
 def get_dataset(
     cfg: DatasetCfg,
     stage: Stage, seed: int) -> Dataset:

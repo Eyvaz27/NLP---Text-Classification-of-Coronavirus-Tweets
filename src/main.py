@@ -252,10 +252,16 @@ class Trainer:
 def model_training(cfg, vis_dir):
     
     cfg = load_typed_root_config(cfg)
-    data_module = data_module = DataModule(cfg.dataset, cfg.data_loader, global_rank=0)
+    data_module = DataModule(cfg.dataset, cfg.data_loader, global_rank=0)
+
+    cfg.model.encoder.input_size = cfg.dataset.embedding_dim
     encoder = get_encoder(cfg.model.encoder)
+
+    cfg.model.decoder.input_size = encoder.feature_dim
+    cfg.model.decoder.output_size = cfg.dataset.class_count
     decoder = get_decoder(cfg.model.decoder)
     losses = get_losses(cfg.loss)
+    
     trainer = Trainer(trainer_cfg=cfg.trainer, encoder=encoder, decoder=decoder, 
                       losses=losses, visdir=vis_dir, datamodule=data_module)
     trainer.train_model()

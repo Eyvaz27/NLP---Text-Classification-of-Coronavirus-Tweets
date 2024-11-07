@@ -1,0 +1,4 @@
+name: perceptron
+input_dim: null
+output_dim: null
+non_linearity: null # Input for loss is expected to contain the unnormalized logits for each class 

@@ -1,5 +1,5 @@
 name: tweet
-
 max_length: 64
 padding: "max_length"
 truncation: true
+eval_set_ratio: 0.2

@@ -1,32 +1,30 @@
 import torch
 import numpy as np
 import pandas as pd
-from typing import Union, Optional, Literal
-from torch.utils.data import Dataset
-from transformers import AutoTokenizer
 from dataclasses import dataclass
 from transformers import BertModel
-
-Stage = Literal["train", "validation", "test"]
-TRAIN_FILE_PATH = "/workspaces/NLP---Text-Classification-of-Coronavirus-Tweets/dataset/Corona_NLP_train.csv"
-TEST_FILE_PATH = "/workspaces/NLP---Text-Classification-of-Coronavirus-Tweets/dataset/Corona_NLP_test.csv"
-CLASS_MAP = {"Extremely Negative": 0.0, "Negative": 1.0, "Neutral": 2.0, "Positive": 3.0, "Extremely Positive": 4.0}
-
+from torch.utils.data import Dataset
+from transformers import AutoTokenizer
+from typing import Union, Optional, Literal
+from .meta_info import Stage, TRAIN_FILE_PATH, TEST_FILE_PATH, CLASS_MAP
 
 @dataclass
-class DatasetCfg:
+class TweetDatasetCfg:
+    name: Literal["tweet"]
     max_length: int
     padding: str
     truncation: bool
+    eval_set_ratio: float
 
 class TweetDataset(Dataset):
     def __init__(self,
-                 cfg: DatasetCfg,  
+                 cfg: TweetDatasetCfg,  
                  stage: Stage, 
-                 random_seed: Optional[int],
-                 eval_set_ratio: float=0.2):
+                 random_seed: Optional[int]):
         
-        assert eval_set_ratio>=0 and eval_set_ratio<=1.0
+        self.eval_set_ratio = self.cfg.eval_set_ratio
+        assert self.eval_set_ratio>=0 and self.eval_set_ratio<=1.0
+
         self.seed = random_seed if random_seed else 42
         self.stage = stage
         self.cfg = cfg
@@ -48,6 +46,7 @@ class TweetDataset(Dataset):
             self.feature_texts = feature_texts
             self.label_texts = label_texts
         else:
+            np.random.seed(seed=self.seed)
             random_perm_indexes = np.random.permutation(len(feature_texts))
             train_sample_indexes = random_perm_indexes[:int((1.0 - self.eval_set_ratio) * len(random_perm_indexes))]
             validation_sample_indexes = random_perm_indexes[int((1.0 - self.eval_set_ratio) * len(random_perm_indexes)):]

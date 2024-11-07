@@ -1,7 +1,6 @@
 from torch.utils.data import Dataset
 from .dataset_tweet import TweetDataset, TweetDatasetCfg
-from .types import Stage
-from .view_sampler import get_view_sampler
+from .meta_info import Stage
 
 DATASETS: dict[str, Dataset] = {
     "tweet": TweetDataset}

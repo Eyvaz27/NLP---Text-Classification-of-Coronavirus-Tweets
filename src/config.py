@@ -12,33 +12,31 @@ from .model.encoder import EncoderCfg
 
 @dataclass
 class OptimizerCfg:
-    lr: float
-    warm_up_steps: int
+    optimizer_type: str
+    base_lr: float
+    betas: list[float]
+    scheduler: str
+    eta_min: float
     gradient_clip_val: float
-    betas: list[int]
 
 @dataclass
 class CheckpointingCfg:
-    load: Optional[str]  # Not a path, since it could be something like wandb://...
     checkpoint_iter: int
-
-@dataclass
-class EvaluationCfg:
+    training_loss_log: int
     validate_iter: int
     test_iter: int
 
 @dataclass
 class ModelCfg:
-    decoder: DecoderCfg
     encoder: EncoderCfg
-
+    decoder: DecoderCfg  
 
 @dataclass
 class TrainerCfg:
-    total_iter: int
+    epoch_num: int
+    pretrained_ckpt: Optional[str]
     optimizer: OptimizerCfg
     checkpointing: CheckpointingCfg
-    evaluation: EvaluationCfg
 
 @dataclass
 class RootCfg:

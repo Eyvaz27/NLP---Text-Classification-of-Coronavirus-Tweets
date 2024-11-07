@@ -28,7 +28,7 @@ def worker_init_fn(worker_id: int) -> None:
     random.seed(int(torch.utils.data.get_worker_info().seed) % (2**32 - 1))
     np.random.seed(int(torch.utils.data.get_worker_info().seed) % (2**32 - 1))
 
-class DataModule(LightningDataModule):
+class DataModule:
     dataset_cfg: DatasetCfg
     data_loader_cfg: DataLoaderCfg
     global_rank: int

@@ -1,12 +1,14 @@
 from dataclasses import dataclass
 
 from jaxtyping import Float
+from typing import Literal
 from torch import Tensor, nn
 from .loss import Loss
 
 
 @dataclass
 class LossCCECfg:
+    name: Literal['CCE']
     weight: float
 
 @dataclass

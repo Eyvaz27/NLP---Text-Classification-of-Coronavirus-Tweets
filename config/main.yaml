@@ -1,8 +1,10 @@
 defaults:
+  - hydra: defaults
   - dataset: tweet
   - model/encoder: lstm
   - model/decoder: perceptron
   - loss: [cce]
+  - _self_ 
 
 data_loader:
   train:
@@ -22,17 +24,19 @@ data_loader:
     random_seed: 42
 
 trainer:
-  total_iter: 100000
+  epoch_num: 100
+  pretrained_ckpt: null
   optimizer:
-    gradient_clip_val: 0.01
-    warm_up_steps: 2000
-    lr: 1.5e-4
+    optimizer_type: "adam"
+    base_lr: 1.5e-3
     betas:
       - 0.9
       - 0.999
+    scheduler: 'cos'
+    eta_min: 1e-5
+    gradient_clip_val: 0.1
   checkpointing:
-    pretrain_ckpt: null
-    checkpoint_iter: 5000
-  evaluation:
-    validate_iter: 5000
-    test_iter: 10000
+    checkpoint_iter: 20
+    training_loss_log: 5
+    validate_iter: 20
+    test_iter: 40

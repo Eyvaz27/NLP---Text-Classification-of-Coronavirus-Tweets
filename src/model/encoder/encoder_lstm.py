@@ -22,7 +22,13 @@ class EncoderLSTMCfg:
 class EncoderLSTM(Encoder[EncoderLSTMCfg]):
     def __init__(self, cfg: EncoderLSTMCfg) -> None:
         super().__init__(cfg)
-        
+        self.init_encoder()
+    
+    def init_encoder(self):
+        self.model = nn.LSTM(input_size=self.cfg.input_size, hidden_size=self.cfg.hidden_size, 
+                             num_layers=self.cfg.num_layers, bias=self.cfg.bias, 
+                             batch_first=self.cfg.batch_first, dropout=self.cfg.dropout,
+                             bidirectional=self.cfg.bidirectional)
     def reset_hidden_cell(self, seq_length):
         D = 2 if self.cfg.bidirectional else 1
         if self.cfg.batch_first:
@@ -33,12 +39,6 @@ class EncoderLSTM(Encoder[EncoderLSTMCfg]):
             c0 = torch.randn(seq_length, D*self.cfg.num_layers, self.cfg.hidden_size)
         return h0, c0
     
-    def init_encoder(self):
-        self.model = nn.LSTM(input_size=self.cfg.input_size, hidden_size=self.cfg.hidden_size, 
-                             num_layers=self.cfg.num_layers, bias=self.cfg.bias, 
-                             batch_first=self.cfg.batch_first, dropout=self.cfg.dropout,
-                             bidirectional=self.cfg.bidirectional)
-
     def forward(
         self,
         features: Float[Tensor, "batch seq dim"]

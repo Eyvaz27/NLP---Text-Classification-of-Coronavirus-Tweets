@@ -9,7 +9,6 @@ from .dataset.data_module import DataLoaderCfg, DatasetCfg
 from .loss import LossCfgWrapper
 from .model.decoder import DecoderCfg
 from .model.encoder import EncoderCfg
-from .model.model_wrapper import OptimizerCfg, TestCfg, TrainCfg
 
 @dataclass
 class OptimizerCfg:

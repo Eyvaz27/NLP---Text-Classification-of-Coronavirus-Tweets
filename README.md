@@ -10,7 +10,7 @@ Train:
 - Initialize the virtual environment \n
 - Configure the experiment by modifying config/main.yaml \n
 - Start the experiment with [bash run.sh] \n
-- Monitor the logs and checkpoints under /experiment directory \n
+- Monitor the logs and checkpoints under /experiments directory \n
 
 ### Happy Experimentations !
 

@@ -7,10 +7,10 @@ How to initialize virtual environment ?
     pipenv shell && echo "Successfully initialized Virtual Environment"
 
 Train: 
-- Initialize the virtual environment \n
-- Configure the experiment by modifying config/main.yaml \n
-- Start the experiment with [bash run.sh] \n
-- Monitor the logs and checkpoints under /experiments directory \n
+- Initialize the virtual environment 
+- Configure the experiment by modifying config/main.yaml 
+- Start the experiment with [bash run.sh] 
+- Monitor the logs and checkpoints under /experiments directory 
 
 ### Happy Experimentations !
 

@@ -41,7 +41,7 @@ class EncoderGRU(Encoder[EncoderGRUCfg]):
         self,
         features: Float[Tensor, "batch seq dim"]
         ) -> Float[Tensor, "batch"]:
-
+        
         N, _, _ = features.shape
         # # # initialize hidden and cell states
         h0 = self.reset_hidden_state(N)

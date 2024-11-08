@@ -1,7 +1,7 @@
 defaults:
   - hydra: defaults
   - dataset: tweet
-  - model/encoder: gru
+  - model/encoder: transformer
   - model/decoder: perceptron
   - loss: [cce]
   - _self_ 

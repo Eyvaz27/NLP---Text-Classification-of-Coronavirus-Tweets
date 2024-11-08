@@ -18,6 +18,7 @@ import numpy as np
 from .config import load_typed_root_config
 from .loss import get_losses
 from .loss.loss import Loss
+from torchsummary import summary
 from .dataset.data_module import DataModule
 from .model.encoder import Encoder, get_encoder
 from .model.decoder import Decoder, get_decoder

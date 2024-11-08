@@ -1,0 +1,6 @@
+name: mlp
+input_size: null
+hidden_size: 64
+num_layers: 3
+output_size: null
+non_linearity: null # Input for loss is expected to contain the unnormalized logits for each class 

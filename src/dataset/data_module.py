@@ -14,6 +14,7 @@ from .meta_info import Stage
 class DataLoaderStageCfg:
     batch_size: int
     num_workers: int
+    prefetch_factor: int
     persistent_workers: bool
     random_seed: int | None
 
@@ -61,6 +62,7 @@ class DataModule:
             dataset,
             self.data_loader_cfg.train.batch_size,
             shuffle=True,num_workers=self.data_loader_cfg.train.num_workers,
+            prefetch_factor=self.data_loader_cfg.train.prefetch_factor,
             generator=self.get_generator(self.data_loader_cfg.train),
             persistent_workers=self.get_persistent(self.data_loader_cfg.train),
             worker_init_fn=worker_init_fn)
@@ -72,6 +74,7 @@ class DataModule:
             dataset,
             self.data_loader_cfg.val.batch_size,
             num_workers=self.data_loader_cfg.val.num_workers,
+            prefetch_factor=self.data_loader_cfg.val.prefetch_factor,
             generator=self.get_generator(self.data_loader_cfg.val),
             persistent_workers=self.get_persistent(self.data_loader_cfg.val),
             worker_init_fn=worker_init_fn)
@@ -83,6 +86,7 @@ class DataModule:
             dataset,
             self.data_loader_cfg.test.batch_size,
             num_workers=self.data_loader_cfg.test.num_workers,
+            prefetch_factor=self.data_loader_cfg.test.prefetch_factor,
             generator=self.get_generator(self.data_loader_cfg.test),
             persistent_workers=self.get_persistent(self.data_loader_cfg.test),
             worker_init_fn=worker_init_fn)

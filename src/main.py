@@ -208,7 +208,7 @@ class Trainer:
                                             self.cfg.optimizer.gradient_clip_val)
                 # Optimizer step
                 self.optimizer.step()
-                # print(f"Training loss after {epoch_num} steps = {np.mean(epoch_loss_history)}")
+                print(f"Training loss after {epoch_num} steps = {np.mean(epoch_loss_history)}")
                 # # 
                 # # Updating Scheduler
                 if self.cfg.optimizer.scheduler != "none": # and new_scaler < old_scaler: 

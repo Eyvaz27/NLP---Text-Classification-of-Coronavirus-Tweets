@@ -2,8 +2,8 @@
 NLP - Text Classification of Coronavirus Tweets
 The goal of this competition is to perform text classification of approximately 45000 tweets that originated during coronavirus times on twitter.
 
-How to initialize virtual environment?
-    pipenv install -r requirements.txt && pipenv lock && \
+How to initialize virtual environment ?
+- pipenv install -r requirements.txt && pipenv lock && \
     pipenv shell && echo "Successfully initialized Virtual Environment"
 
 Train: 
@@ -15,6 +15,6 @@ Train:
 ### Happy Experimentations !
 
 Citations:
-Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context
-Vision Transformers Need Registers
+* Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context
+* Vision Transformers Need Registers
 
